@@ -3,19 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DoMe</title>
+    <title>Pin me up!</title>
     <link rel="stylesheet" href="../src/style.css">
 </head>
 <body>
     <main>
-        <div class="user-container"><h1></h1></div>
         <div class="content-container">
-            <div class="sticky-note">
-                <div class="sticky-title">Do this</div>
-                <div class="sticky-description">- testing description</div>
+            <div class="user-container">
+                <h1>USER</h1>
             </div>
+            <div class="add-note-container" role="button">Add a sticky note</div>
+            <form class="invisible">
+                <legend>PIN A NEW STICKY NOTE?</legend>
+                <div class="inputs">
+                    <label for="title">
+                        What do you want to do?
+                        <input type="text" name="title" id="title">
+                    </label>
+                    <label for="description">
+                        How would you describe this task?
+                        <textarea name="description" id="description" cols="20" rows="5"></textarea>
+                    </label>
+                    <label for="date">
+                        When is your deadline?
+                        <input class="date-element" type="date" name="date" id="date">
+                    </label>
+                </div>
+                <div class="submit-buttons">
+                    <button id="pin-it-btn">Pin it!</button>
+                    <button id="maybe-later-btn">Maybe later</button>
+                </div>
+            </form>
         </div>
-        <div class="add-note-container" role="button">Add a sticky note</div>
     </main>
    <!--<hr>-->
     <footer>

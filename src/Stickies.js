@@ -7,6 +7,10 @@ class Stickies {
         return this.list = newArray
     }
 
+    getList() {
+        return this.list
+    }
+
     addSticky(newSticky) {
         return this.list.push(newSticky)
     }
