@@ -1,0 +1,240 @@
+@font-face {
+    font-family: 'Sunday';
+    src: url('./font/The\ Sunday.otf');
+}
+
+$primary-color: #ffcfd1;
+$primary-accent-color: #EF7A85;
+$submit-sticky-color: #CCFFCC;
+$submit-sticky-accent-color: #71c971;
+$maybe-later-sticky-color: #f99584;
+$sticky-note-color: rgb(238, 234, 8);
+$main-font: 'Sunday';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 24px;
+    font-family: $main-font;
+}
+
+body, main, .user-container, .sticky-note, form, label, .inputs, .submit-buttons {
+    display: flex;
+}
+
+body {
+    height: 100vh;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    /*background: linear-gradient(to bottom right, $primary-color, var(--submit-sticky-color));*/
+}
+
+main {
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.content-container {
+    min-height: 700px;
+    min-width: 1400px;
+    background: url('./imgs/corkboard.jpg') no-repeat center center/contain;
+    padding: 55px;
+    display: grid;
+    grid-template-columns: repeat(6, 210px);
+    grid-template-rows: repeat(3 , 190px);
+    row-gap: 10px;
+    column-gap: 10px;
+    position: relative;
+}
+
+.user-container {
+    position: absolute;
+    top: -60px;
+    left: -100px;
+    height: 180px;
+    width: 240px;
+    background: url('./imgs/stripped\ paper.png') no-repeat center center/contain;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(-30deg);
+    z-index: 1;
+}
+
+h1 {
+    text-decoration: underline;
+    font-size: 2em;
+}
+
+.add-note-container {
+    position: absolute;
+    top: 0px;
+    right: -40px;
+    background-color: $primary-color;
+    box-shadow: 4px 4px $primary-accent-color;
+    padding: 10px;
+    transform: rotate(30deg);
+}
+
+.add-note-container:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    background-color: $primary-accent-color;
+    box-shadow: 4px 4px #cc606b;
+}
+
+.sticky-note {
+    position: relative;
+    flex-direction: column;
+    height: 190px;
+    width: 200px;
+    background-color: $primary-color;
+    padding: 14px;
+    letter-spacing: 1.8px;
+    box-shadow: 4px 4px $primary-accent-color;
+}
+
+.sticky-description {
+    font-size: .75em;
+    margin-top: 8px;
+}
+
+.sticky-date {
+    position: absolute;
+    font-size: .5em;
+    bottom: 4px;
+    right: 4px;
+}
+
+form {
+    position: absolute;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    height: fit-content;
+    width: 360px;
+    padding: 20px 30px 20px 30px;
+    border: 2px solid $primary-accent-color;
+    box-shadow: 7px 7px $primary-accent-color;
+    background-color: $primary-color;
+    z-index: 1;
+
+    .inputs {
+        flex-direction: column;
+        gap: 10px;
+
+        label {
+            font-size: .85em;
+            text-align: center;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+    
+            input  {
+                height: 50px;
+                width: 280px;
+                padding: 10px;
+            }
+        }
+    
+        textarea {
+            padding: 5px;
+            font-size: 1em;
+            resize: none;
+        }
+    
+        #date {
+            background-color: white;
+            text-align: center;
+            font-size: 1em;
+            height: 45px;
+        }
+    }
+    
+}
+
+.invisible {
+    display: none;
+}
+
+.submit-buttons {
+    width: 100%;
+    justify-content: space-between;
+
+    #pin-it-btn, #maybe-later-btn {
+        padding: 10px;
+        border: none;
+        position: relative;
+
+        &:hover:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -6px;
+            border-top: 13px solid $primary-color;
+            border-right: 13px solid #519251;
+            width: 3px;
+            transform: rotate(90deg);
+        }
+
+        &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 15px;
+            margin: -5px;
+        }
+    }
+
+    #pin-it-btn {
+        background-color: $submit-sticky-color;
+        box-shadow: 4px 4px $submit-sticky-accent-color;
+
+        &:hover {
+            background-color: $submit-sticky-accent-color;
+            box-shadow: 4px 4px #519251;
+        }
+        
+    }
+
+    #maybe-later-btn {
+        background-color: $maybe-later-sticky-color;
+        box-shadow: 4px 4px $primary-accent-color;
+
+        &:hover:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -6px;
+            border-right: 13px solid #ad5962;
+            width: 3px;
+            transform: rotate(90deg);
+        }
+
+        &:hover {
+            background-color: $primary-accent-color;
+            box-shadow: 4px 4px #ad5962;
+        }
+    }
+
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: black;
+}
+
+footer {
+    padding: 25px;
+    font-size: 1.2em;
+    text-align: center;
+}

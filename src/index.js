@@ -16,13 +16,16 @@ stickies.addSticky(test3);
 const content = document.querySelector(".content-container");
 const addNoteBtn = document.querySelector(".add-note-container");
 const form = document.querySelector("form");
+const inputField = document.querySelector("label input");
+const textField = document.querySelector("label textarea");
+const fields = [inputField, textField];
 const dateElement = document.querySelector(".date-element");
 const pinSubmitBtn = document.getElementById("pin-it-btn");
 const maybeLaterSubmitBtn = document.getElementById("maybe-later-btn");
 
 // DOM Creator Functions
 
-const createStickyNoteComponent = (stickyObject) => {
+const createStickyElement = (stickyObject) => {
   const stickyNote = document.createElement("div");
   stickyNote.classList.add("sticky-note");
 
@@ -53,13 +56,24 @@ function handleFormClass() {
   }
 }
 
+function emptyFields() {
+  fields.forEach((field) => {
+    field.value = "";
+  });
+}
+
 // Listeners
 
-addNoteBtn.addEventListener("click", handleFormClass);
+addNoteBtn.addEventListener("click", () => {
+  handleFormClass();
+  emptyFields();
+  formatTodayDate();
+  inputField.focus()
+});
 
 maybeLaterSubmitBtn.addEventListener("click", (e) => {
-    e.preventDefault()
-    handleFormClass()
+  e.preventDefault();
+  handleFormClass();
 });
 
 // Utils
@@ -70,9 +84,16 @@ const formatDate = (dateEntered) => {
   return date;
 };
 
+const formatTodayDate = () => {
+  const dateToday = new Date().toDateString().split(" ");
+  const dateToEnter = dateToday.join("/");
+  const fomattedDate = format(dateToEnter, "yyyy-MM-dd");
+  dateElement.value = `${fomattedDate.toString()}`;
+};
+
 function render() {
   stickies.getList().map((sticky) => {
-    content.appendChild(createStickyNoteComponent(sticky));
+    content.appendChild(createStickyElement(sticky));
   });
 }
 
