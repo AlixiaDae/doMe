@@ -30,17 +30,10 @@ main {
 }
 
 .content-container {
-  min-height: 700px;
-  min-width: 1400px;
   background: url("./imgs/corkboard.jpg") no-repeat center center/contain;
   padding: 55px;
-  display: grid;
-  grid-template-columns: repeat(6, 210px);
-  grid-template-rows: repeat(3, 190px);
-  row-gap: 10px;
-  -moz-column-gap: 10px;
-       column-gap: 10px;
   position: relative;
+  display: flex;
 }
 
 .user-container {
@@ -55,8 +48,7 @@ main {
   transform: rotate(-30deg);
   z-index: 1;
 }
-
-h1 {
+.user-container h1 {
   text-decoration: underline;
   font-size: 2em;
 }
@@ -68,14 +60,22 @@ h1 {
   background-color: #ffcfd1;
   box-shadow: 4px 4px #EF7A85;
   padding: 10px;
-  transform: rotate(30deg);
+  transform: rotate(25deg);
 }
-
 .add-note-container:hover {
   text-decoration: underline;
   cursor: pointer;
   background-color: #EF7A85;
   box-shadow: 4px 4px #cc606b;
+}
+
+.sticky-notes-container {
+  display: grid;
+  grid-template-columns: repeat(6, 210px);
+  grid-template-rows: repeat(3, 190px);
+  row-gap: 10px;
+  -moz-column-gap: 8px;
+       column-gap: 8px;
 }
 
 .sticky-note {
@@ -85,16 +85,19 @@ h1 {
   width: 200px;
   background-color: #ffcfd1;
   padding: 14px;
-  letter-spacing: 1.8px;
+  letter-spacing: 1px;
   box-shadow: 4px 4px #EF7A85;
+  border: 2px solid #EF7A85;
 }
-
-.sticky-description {
+.sticky-note .sticky-title {
+  font-size: 0.8em;
+  text-align: center;
+}
+.sticky-note .sticky-description {
   font-size: 0.75em;
   margin-top: 8px;
 }
-
-.sticky-date {
+.sticky-note .sticky-date {
   position: absolute;
   font-size: 0.5em;
   bottom: 4px;
@@ -103,7 +106,6 @@ h1 {
 
 form {
   position: absolute;
-  margin-top: 5%;
   margin-left: auto;
   margin-right: auto;
   left: 0;

@@ -4,4 +4,8 @@ export default class StickyNote {
         this.description = description
         this.date = date
     }
+
+    setTitle(newTitle) {
+        this.title = newTitle
+    }
 }

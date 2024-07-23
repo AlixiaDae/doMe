@@ -1,5 +1,6 @@
 import Stickies from "./Stickies";
 import StickyNote from "./StickyNote";
+import Storage from "./Storage";
 import { format } from "date-fns";
 
 const stickies = new Stickies();
@@ -7,13 +8,14 @@ const stickies = new Stickies();
 const test1 = new StickyNote("Test 1", "thisonenew", "06/02/2024");
 const test2 = new StickyNote("Test 2", "adhfiudsh");
 const test3 = new StickyNote("Test 3", "testing description");
-stickies.addSticky(test1);
-stickies.addSticky(test2);
-stickies.addSticky(test3);
+
+Storage.addStickyNote(test1);
+Storage.addStickyNote(test2);
+Storage.addStickyNote(test3);
 
 // DOM Elements
 
-const content = document.querySelector(".content-container");
+const stickyNotesElement = document.querySelector(".sticky-notes-container");
 const addNoteBtn = document.querySelector(".add-note-container");
 const form = document.querySelector("form");
 const inputField = document.querySelector("label input");
@@ -28,10 +30,13 @@ const maybeLaterSubmitBtn = document.getElementById("maybe-later-btn");
 const createStickyElement = (stickyObject) => {
   const stickyNote = document.createElement("div");
   stickyNote.classList.add("sticky-note");
+  stickyNote.style.transform = `rotate(${getRandomDegree()}deg)`;
 
   const stickyTitle = document.createElement("div");
+  stickyTitle.setAttribute("contenteditable", "true");
   stickyTitle.classList.add("sticky-title");
   stickyTitle.textContent = stickyObject.title;
+  const pointerTitle = stickyObject.title
 
   const stickyDescription = document.createElement("div");
   stickyDescription.classList.add("sticky-description");
@@ -43,8 +48,19 @@ const createStickyElement = (stickyObject) => {
 
   stickyNote.append(stickyTitle, stickyDescription, stickyDate);
 
+  // Listeners for sticky notes
+  
+  stickyTitle.addEventListener("keydown", (e) => {
+    if(e.key === "Enter") {
+      Storage.reTitleStickyNote(pointerTitle, e.target.textContent)
+      render()
+    }
+  })
+
   return stickyNote;
 };
+
+
 
 // Handlers
 
@@ -68,8 +84,17 @@ addNoteBtn.addEventListener("click", () => {
   handleFormClass();
   emptyFields();
   formatTodayDate();
-  inputField.focus()
+  inputField.focus();
 });
+
+pinSubmitBtn.addEventListener("click", (e) => {
+  e.preventDefault()
+  if(inputField.value === "" || textField.value === "") return
+  const newNote = new StickyNote(inputField.value, textField.value, dateElement.value)
+  Storage.addStickyNote(newNote)
+  handleFormClass()
+  render()
+})
 
 maybeLaterSubmitBtn.addEventListener("click", (e) => {
   e.preventDefault();
@@ -81,7 +106,7 @@ maybeLaterSubmitBtn.addEventListener("click", (e) => {
 const formatDate = (dateEntered) => {
   if (dateEntered === "") return;
   const date = format(new Date(dateEntered), "MMM dd yyyy");
-  return date;
+  return "Complete by " + date;
 };
 
 const formatTodayDate = () => {
@@ -91,10 +116,23 @@ const formatTodayDate = () => {
   dateElement.value = `${fomattedDate.toString()}`;
 };
 
+//Using this to place random tilt on sticky notes
+const getRandomDegree = () => {
+  const min = Math.ceil(-12);
+  const max = Math.floor(12);
+
+  return Math.floor(Math.random() * (max - min)) + min;
+};
+
+
+// MAIN RENDERING FUNCTION
 function render() {
-  stickies.getList().map((sticky) => {
-    content.appendChild(createStickyElement(sticky));
-  });
+  stickyNotesElement.textContent = ""
+  Storage.getStickyNotes()
+    .getList()
+    .map((sticky) => {
+      stickyNotesElement.appendChild(createStickyElement(sticky));
+    });
 }
 
 render();

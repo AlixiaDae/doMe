@@ -1,24 +1,32 @@
 class Stickies {
-    constructor() {
-        this.list = []
-    }
+  constructor() {
+    this.list = [];
+  }
 
-    setList(newArray) {
-        return this.list = newArray
-    }
+  setList(newArray) {
+    this.list = newArray;
+  }
 
-    getList() {
-        return this.list
-    }
+  getList() {
+    return this.list;
+  }
 
-    addSticky(newSticky) {
-        return this.list.push(newSticky)
-    }
+  addSticky(newSticky) {
+    if (this.list.find((sticky) => sticky.title === newSticky.title)) return;
+    return this.list.push(newSticky);
+  }
 
-    deleteSticky(stickyToDelete) {
-        const newArray = this.list.filter(sticky => sticky.title !== stickyToDelete.title)
-        this.setList(newArray)
-    }
+  deleteSticky(stickyToDeleteTitle) {
+    const newArray = this.list.filter(
+      (sticky) => sticky.title !== stickyToDeleteTitle
+    );
+    this.setList(newArray);
+  }
+
+  getSticky(chosenStickyTitle) {
+    return this.list.find(note => note.title === chosenStickyTitle)
+  }
+
 }
 
-export default Stickies
+export default Stickies;
