@@ -1,7 +1,7 @@
-import Stickies from "./Stickies";
 import StickyNote from "./StickyNote";
 import Storage from "./Storage";
 import { format } from "date-fns";
+import './styles.css'
 
 
 // DOM Elements
