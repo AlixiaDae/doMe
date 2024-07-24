@@ -16,15 +16,15 @@ class Stickies {
     return this.list.push(newSticky);
   }
 
-  deleteSticky(stickyToDeleteTitle) {
+  deleteSticky(stickyToDelete) {
     const newArray = this.list.filter(
-      (sticky) => sticky.title !== stickyToDeleteTitle
+      (sticky) => sticky.title !== stickyToDelete.title
     );
     this.setList(newArray);
   }
 
-  getSticky(chosenStickyTitle) {
-    return this.list.find(note => note.title === chosenStickyTitle)
+  getSticky(chosenSticky) {
+    return this.list.find(note => note.title === chosenSticky.title)
   }
 
 }

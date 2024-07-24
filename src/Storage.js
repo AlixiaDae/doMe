@@ -41,4 +41,11 @@ export default class Storage {
     stickyToReTitle.setTitle(newNoteTitle);
     Storage.saveStickyNotes(stickies);
   }
+
+  static setNewDescription(chosenNote, newDescription) {
+    const stickies = Storage.getStickyNotes();
+    const stickyToAlter = stickies.getSticky(chosenNote);
+    stickyToAlter.setDescription(newDescription);
+    Storage.saveStickyNotes(stickies);
+  }
 }

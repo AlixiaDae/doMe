@@ -1,11 +1,15 @@
 export default class StickyNote {
-    constructor(title, description, date = "") {
-        this.title = title
-        this.description = description
-        this.date = date
-    }
+  constructor(title, description, date = "") {
+    this.title = title;
+    this.description = description
+    this.date = date;
+  }
 
-    setTitle(newTitle) {
-        this.title = newTitle
-    }
+  setTitle(newTitle) {
+    this.title = newTitle;
+  }
+
+  setDescription(newDescription) {
+    this.description = [newDescription];
+  }
 }

@@ -3,15 +3,6 @@ import StickyNote from "./StickyNote";
 import Storage from "./Storage";
 import { format } from "date-fns";
 
-const stickies = new Stickies();
-
-const test1 = new StickyNote("Test 1", "thisonenew", "06/02/2024");
-const test2 = new StickyNote("Test 2", "adhfiudsh");
-const test3 = new StickyNote("Test 3", "testing description");
-
-Storage.addStickyNote(test1);
-Storage.addStickyNote(test2);
-Storage.addStickyNote(test3);
 
 // DOM Elements
 
@@ -32,11 +23,12 @@ const createStickyElement = (stickyObject) => {
   stickyNote.classList.add("sticky-note");
   stickyNote.style.transform = `rotate(${getRandomDegree()}deg)`;
 
+  const deleteBtn = document.createElement("button");
+  deleteBtn.id = "delete-btn";
+
   const stickyTitle = document.createElement("div");
-  stickyTitle.setAttribute("contenteditable", "true");
   stickyTitle.classList.add("sticky-title");
   stickyTitle.textContent = stickyObject.title;
-  const pointerTitle = stickyObject.title
 
   const stickyDescription = document.createElement("div");
   stickyDescription.classList.add("sticky-description");
@@ -46,21 +38,43 @@ const createStickyElement = (stickyObject) => {
   stickyDate.classList.add("sticky-date");
   stickyDate.textContent = formatDate(stickyObject.date);
 
-  stickyNote.append(stickyTitle, stickyDescription, stickyDate);
+  stickyNote.append(deleteBtn, stickyTitle, stickyDescription, stickyDate);
 
   // Listeners for sticky notes
-  
+
+  stickyTitle.addEventListener("click", (e) => {
+    e.target.setAttribute("contenteditable", "true");
+  });
+
   stickyTitle.addEventListener("keydown", (e) => {
-    if(e.key === "Enter") {
-      Storage.reTitleStickyNote(pointerTitle, e.target.textContent)
-      render()
+    if (e.key === "Enter") {
+      Storage.reTitleStickyNote(stickyObject, e.target.textContent);
+      render();
     }
-  })
+  });
+
+  // Add a way to add more "bullet points" to sticky notes
+
+  stickyDescription.addEventListener("click", (e) => {
+    e.target.setAttribute("contenteditable", "true");
+    const array = e.target.textContent.split(" ");
+    e.target.textContent = array.pop();
+  });
+
+  stickyDescription.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      Storage.setNewDescription(stickyObject, e.target.textContent);
+      render();
+    }
+  });
+
+  deleteBtn.addEventListener("click", () => {
+    Storage.deleteStickyNote(stickyObject);
+    render();
+  });
 
   return stickyNote;
 };
-
-
 
 // Handlers
 
@@ -83,18 +97,22 @@ function emptyFields() {
 addNoteBtn.addEventListener("click", () => {
   handleFormClass();
   emptyFields();
-  formatTodayDate();
+  formatTodayDateOnForm();
   inputField.focus();
 });
 
 pinSubmitBtn.addEventListener("click", (e) => {
-  e.preventDefault()
-  if(inputField.value === "" || textField.value === "") return
-  const newNote = new StickyNote(inputField.value, textField.value, dateElement.value)
-  Storage.addStickyNote(newNote)
-  handleFormClass()
-  render()
-})
+  e.preventDefault();
+  if (inputField.value === "" || textField.value === "") return;
+  const newNote = new StickyNote(
+    inputField.value,
+    textField.value,
+    dateElement.value
+  );
+  Storage.addStickyNote(newNote);
+  handleFormClass();
+  render();
+});
 
 maybeLaterSubmitBtn.addEventListener("click", (e) => {
   e.preventDefault();
@@ -109,7 +127,13 @@ const formatDate = (dateEntered) => {
   return "Complete by " + date;
 };
 
-const formatTodayDate = () => {
+const formatToday = () => {
+  const dateToday = new Date().toDateString().split(" ");
+  const date = format(new Date(dateToday), "MM/dd/yyyy");
+  return date
+};
+
+const formatTodayDateOnForm = () => {
   const dateToday = new Date().toDateString().split(" ");
   const dateToEnter = dateToday.join("/");
   const fomattedDate = format(dateToEnter, "yyyy-MM-dd");
@@ -124,15 +148,20 @@ const getRandomDegree = () => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-
 // MAIN RENDERING FUNCTION
 function render() {
-  stickyNotesElement.textContent = ""
+  stickyNotesElement.textContent = "";
   Storage.getStickyNotes()
     .getList()
     .map((sticky) => {
       stickyNotesElement.appendChild(createStickyElement(sticky));
     });
 }
+
+
+
+const test1 = new StickyNote("Example pin", "This is how your pins will look like! Edit me if you want or delete me using the red pin on top of the note!", `${formatToday()}`);
+
+Storage.addStickyNote(test1);
 
 render();
