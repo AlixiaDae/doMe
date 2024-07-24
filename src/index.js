@@ -158,8 +158,6 @@ function render() {
     });
 }
 
-
-
 const test1 = new StickyNote("Example pin", "This is how your pins will look like! Edit me if you want or delete me using the red pin on top of the note!", `${formatToday()}`);
 
 Storage.addStickyNote(test1);
