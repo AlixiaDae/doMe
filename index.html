@@ -7,14 +7,41 @@
 </head>
 <body>
     <main>
+        <form class="sign-up-form invisible">
+            <legend>Sign Up With Me!</legend>
+            <div class="inputs">
+                <label for="email">Email:
+                    <input type="text" name="email">
+                </label>
+                <label for="password">Password:
+                    <input type="password" name="password"></label>
+            </div>
+            <button type="submit" id="sign-up-btn">Sign Up</button>
+            <button class="sign-up-later-btn">Sign up later</button>
+        </form>
+        <form class="log-in-form invisible">
+            <legend>Log In</legend>
+            <label for="email">Email:
+                <input type="text" name="email">
+            </label>
+            <label for="password">Password:
+                <input type="password" name="password">
+            </label>
+            <button class="log-in-form-btn">Log In</button>
+        </form>
         <div class="content-container">
             <div class="user-container">
                 <h1>Alice</h1>
             </div>
+            <div class="user-auth-container">
+                <button class="sign-up">Sign up?</button>
+                <button class="log-in">Log in</button>
+                <button class="log-out">Log out</button>
+            </div>
             <div class="add-note-container" role="button">Add a sticky note</div>
             <div class="sticky-notes-container">
             </div>
-            <form class="invisible">
+            <form class="add invisible">
                 <legend>PIN A NEW STICKY NOTE?</legend>
                 <div class="inputs">
                     <label for="title">
