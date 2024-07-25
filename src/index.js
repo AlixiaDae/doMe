@@ -10,6 +10,29 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signOut,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+
+// DOM Elements
+
+const stickyNotesElement = document.querySelector(".sticky-notes-container");
+const addNoteBtn = document.querySelector(".add-note-container");
+const pinForm = document.querySelector(".add");
+const signUpAuth = document.querySelector(".sign-up");
+const signUpForm = document.querySelector(".sign-up-form");
+const signUpLater = document.querySelector(".sign-up-later-btn");
+const logInForm = document.querySelector(".log-in-form");
+const logIn = document.querySelector(".log-in");
+const logOut = document.querySelector(".log-out");
+const inputField = document.querySelector("label input");
+const textField = document.querySelector("label textarea");
+const fields = [inputField, textField];
+const dateElement = document.querySelector(".date-element");
+const maybeLaterSubmitBtn = document.getElementById("maybe-later-btn");
 
 // FIREBASE
 
@@ -25,18 +48,34 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 
 const db = getFirestore();
+const auth = getAuth();
 const colRef = collection(db, "pins");
 
-// DOM Elements
+signUpAuth.addEventListener("click", () => {
+  handleSignUpFormClass();
+});
 
-const stickyNotesElement = document.querySelector(".sticky-notes-container");
-const addNoteBtn = document.querySelector(".add-note-container");
-const form = document.querySelector("form");
-const inputField = document.querySelector("label input");
-const textField = document.querySelector("label textarea");
-const fields = [inputField, textField];
-const dateElement = document.querySelector(".date-element");
-const maybeLaterSubmitBtn = document.getElementById("maybe-later-btn");
+signUpForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = signUpForm.email.value;
+  const password = signUpForm.password.value;
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((cred) => {
+      console.log("user created:", cred.user);
+      signUpForm.reset();
+    })
+    .catch((err) => console.log(err.message));
+  handleSignUpFormClass();
+});
+
+signUpLater.addEventListener("click", (e) => {
+  e.preventDefault();
+  handleSignUpFormClass();
+});
+
+logIn.addEventListener("click", () => {
+  handleLogInFormClass();
+});
 
 // DOM Creator Functions
 
@@ -104,12 +143,34 @@ const createStickyElement = (stickyObject, id) => {
 
 // Handlers
 
-function handleFormClass() {
-  if (form.classList.contains("invisible")) {
-    form.classList.remove("invisible");
+function handlePinFormClass() {
+  if (pinForm.classList.contains("invisible")) {
+    pinForm.classList.remove("invisible");
   } else {
-    form.classList.add("invisible");
+    pinForm.classList.add("invisible");
   }
+  signUpForm.classList.add("invisible");
+  logInForm.classList.add("invisible");
+}
+
+function handleSignUpFormClass() {
+  if (signUpForm.classList.contains("invisible")) {
+    signUpForm.classList.remove("invisible");
+  } else {
+    signUpForm.classList.add("invisible");
+  }
+  pinForm.classList.add("invisible");
+  logInForm.classList.add("invisible");
+}
+
+function handleLogInFormClass() {
+  if (logInForm.classList.contains("invisible")) {
+    logInForm.classList.remove("invisible");
+  } else {
+    logInForm.classList.add("invisible");
+  }
+  pinForm.classList.add("invisible");
+  signUpForm.classList.add("invisible");
 }
 
 function emptyFields() {
@@ -121,29 +182,47 @@ function emptyFields() {
 // Listeners
 
 addNoteBtn.addEventListener("click", () => {
-  handleFormClass();
+  handlePinFormClass();
   emptyFields();
   formatTodayDateOnForm();
   inputField.focus();
 });
 
-form.addEventListener("submit", (e) => {
+pinForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
   addDoc(colRef, {
-    title: form.title.value,
-    description: form.description.value,
-    date: formatDate(form.date.value),
+    title: pinForm.title.value,
+    description: pinForm.description.value,
+    date: formatDate(pinForm.date.value),
   }).then(() => {
     emptyFields();
   });
 
-  handleFormClass();
+  handlePinFormClass();
 });
 
 maybeLaterSubmitBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  handleFormClass();
+  handlePinFormClass();
+});
+
+logOut.addEventListener("click", () => {
+  signOut(auth)
+    .then(() => console.log("The user has logged out"))
+    .catch((err) => console.log(err.message));
+});
+
+logInForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = logInForm.email.value;
+  const password = logInForm.password.value;
+  signInWithEmailAndPassword(auth, email, password)
+    .then((cred) => {
+      console.log("User logged in:", cred.user);
+    })
+    .catch((err) => console.log(err.message));
+  logInForm.classList.add("invisible");
 });
 
 // Utils

@@ -10,7 +10,7 @@
   font-family: "Sunday";
 }
 
-body, main, .user-container, .sticky-note, form, label, .inputs, .submit-buttons {
+body, main, .user-container, .sticky-note, .add, .sign-up-form, .log-in-form, label, .inputs, .submit-buttons {
   display: flex;
 }
 
@@ -24,9 +24,128 @@ body {
 
 main {
   height: 100vh;
+  width: 100%;
   justify-content: center;
   align-items: center;
   position: relative;
+}
+main .sign-up-form, main .log-in-form {
+  position: absolute;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: -moz-fit-content;
+  height: fit-content;
+  width: 320px;
+  padding: 20px 30px 20px 30px;
+  border: 2px solid #EF7A85;
+  box-shadow: 7px 7px #EF7A85;
+  background-color: #ffcfd1;
+  z-index: 1;
+  gap: 20px;
+}
+main .sign-up-form .inputs {
+  flex-direction: column;
+  width: 100%;
+}
+main .sign-up-form .inputs label {
+  font-size: 0.85em;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+main .sign-up-form .inputs label input {
+  height: 35px;
+  width: 280px;
+  padding: 10px 0 10px 0;
+}
+main .sign-up-form #sign-up-btn {
+  padding: 10px;
+  border: none;
+  position: relative;
+  background-color: #CCFFCC;
+  box-shadow: 4px 4px #71c971;
+}
+main .sign-up-form #sign-up-btn:hover:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -6px;
+  border-top: 13px solid #ffcfd1;
+  border-right: 13px solid #519251;
+  width: 3px;
+  transform: rotate(90deg);
+}
+main .sign-up-form #sign-up-btn:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 15px;
+  margin: -5px;
+  background-color: #71c971;
+  box-shadow: 4px 4px #519251;
+}
+main .sign-up-form .sign-up-later-btn {
+  padding: 10px;
+  border: none;
+  position: relative;
+  background-color: #f99584;
+  box-shadow: 4px 4px #EF7A85;
+}
+main .sign-up-form .sign-up-later-btn:hover:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -6px;
+  border-top: 13px solid #ffcfd1;
+  border-right: 13px solid #ad5962;
+  width: 3px;
+  transform: rotate(90deg);
+}
+main .sign-up-form .sign-up-later-btn:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 15px;
+  margin: -5px;
+  background-color: #EF7A85;
+  box-shadow: 4px 4px #ad5962;
+}
+main .log-in-form label {
+  font-size: 0.85em;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+main .log-in-form label input {
+  height: 35px;
+  width: 280px;
+  padding: 10px 0 10px 0;
+}
+main .log-in-form .log-in-form-btn {
+  padding: 10px;
+  border: none;
+  position: relative;
+  background-color: #CCFFCC;
+  box-shadow: 4px 4px #71c971;
+}
+main .log-in-form .log-in-form-btn:hover:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -6px;
+  border-top: 13px solid #ffcfd1;
+  border-right: 13px solid #519251;
+  width: 3px;
+  transform: rotate(90deg);
+}
+main .log-in-form .log-in-form-btn:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 15px;
+  margin: -5px;
+  background-color: #71c971;
+  box-shadow: 4px 4px #519251;
 }
 
 .content-container {
@@ -34,6 +153,19 @@ main {
   padding: 55px;
   position: relative;
   display: flex;
+}
+.content-container .user-auth-container {
+  position: absolute;
+  top: -40px;
+  left: 150px;
+}
+.content-container .user-auth-container button {
+  background-color: transparent;
+  border: none;
+}
+.content-container .user-auth-container button:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .user-container {
@@ -133,7 +265,7 @@ main {
   right: 4px;
 }
 
-form {
+.add {
   position: absolute;
   margin-left: auto;
   margin-right: auto;
@@ -152,28 +284,28 @@ form {
   background-color: #ffcfd1;
   z-index: 1;
 }
-form .inputs {
+.add .inputs {
   flex-direction: column;
   gap: 10px;
 }
-form .inputs label {
+.add .inputs label {
   font-size: 0.85em;
   text-align: center;
   flex-direction: column;
   align-items: center;
   gap: 5px;
 }
-form .inputs label input {
+.add .inputs label input {
   height: 50px;
   width: 280px;
   padding: 10px;
 }
-form .inputs textarea {
+.add .inputs textarea {
   padding: 5px;
   font-size: 1em;
   resize: none;
 }
-form .inputs #date {
+.add .inputs #date {
   background-color: white;
   text-align: center;
   font-size: 1em;

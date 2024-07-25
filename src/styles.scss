@@ -23,7 +23,7 @@ $main-font: 'Sunday';
     font-family: $main-font;
 }
 
-body, main, .user-container, .sticky-note, form, label, .inputs, .submit-buttons {
+body, main, .user-container, .sticky-note, .add, .sign-up-form, .log-in-form, label, .inputs, .submit-buttons {
     display: flex;
 }
 
@@ -37,9 +37,147 @@ body {
 
 main {
     height: 100vh;
+    width: 100%;
     justify-content: center;
     align-items: center;
     position: relative;
+
+    .sign-up-form, .log-in-form {
+        position: absolute;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: fit-content;
+        width: 320px;
+        padding: 20px 30px 20px 30px;
+        border: 2px solid $primary-accent-color;
+        box-shadow: 7px 7px $primary-accent-color;
+        background-color: $primary-color;
+        z-index: 1;
+        gap: 20px;
+    }
+
+    .sign-up-form {
+        .inputs {
+            flex-direction: column;
+            width: 100%;
+    
+            label {
+                font-size: .85em;
+                text-align: center;
+                flex-direction: column;
+                align-items: center;
+                gap: 5px;
+        
+                input  {
+                    height: 35px;
+                    width: 280px;
+                    padding: 10px 0 10px 0;
+                }
+            }
+        }
+
+        #sign-up-btn {
+            padding: 10px;
+            border: none;
+            position: relative;
+            background-color: $submit-sticky-color;
+            box-shadow: 4px 4px $submit-sticky-accent-color;
+
+            &:hover:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: -6px;
+                border-top: 13px solid $primary-color;
+                border-right: 13px solid #519251;
+                width: 3px;
+                transform: rotate(90deg);
+            }
+
+            &:hover {
+                cursor: pointer;
+                text-decoration: underline;
+                padding: 15px;
+                margin: -5px;
+                background-color: $submit-sticky-accent-color;
+                box-shadow: 4px 4px #519251;
+            }
+        }
+
+        .sign-up-later-btn {
+            padding: 10px;
+            border: none;
+            position: relative;
+            background-color: $maybe-later-sticky-color;
+            box-shadow: 4px 4px $primary-accent-color;
+
+            &:hover:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: -6px;
+                border-top: 13px solid $primary-color;
+                border-right: 13px solid #ad5962;
+                width: 3px;
+                transform: rotate(90deg);
+            }
+    
+            &:hover {
+                cursor: pointer;
+                text-decoration: underline;
+                padding: 15px;
+                margin: -5px;
+                background-color: $primary-accent-color;
+                box-shadow: 4px 4px #ad5962;
+            }
+        }
+    }
+
+    .log-in-form {
+        
+        label {
+            font-size: .85em;
+            text-align: center;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+    
+            input  {
+                height: 35px;
+                width: 280px;
+                padding: 10px 0 10px 0;
+            }
+        }
+
+        .log-in-form-btn {
+            padding: 10px;
+            border: none;
+            position: relative;
+            background-color: $submit-sticky-color;
+            box-shadow: 4px 4px $submit-sticky-accent-color;
+
+            &:hover:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: -6px;
+                border-top: 13px solid $primary-color;
+                border-right: 13px solid #519251;
+                width: 3px;
+                transform: rotate(90deg);
+            }
+
+            &:hover {
+                cursor: pointer;
+                text-decoration: underline;
+                padding: 15px;
+                margin: -5px;
+                background-color: $submit-sticky-accent-color;
+                box-shadow: 4px 4px #519251;
+            }
+        }
+    }
 }
 
 .content-container {
@@ -47,6 +185,21 @@ main {
     padding: 55px;
     position: relative;
     display: flex;
+
+    .user-auth-container {
+        position: absolute;
+        top: -40px;
+        left: 150px;
+        button {
+            background-color: transparent;
+            border: none;
+
+            &:hover {
+                cursor: pointer;
+                text-decoration: underline;
+            }
+        }
+    }
 }
 
 .user-container {
@@ -153,7 +306,7 @@ main {
     }
 }
 
-form {
+.add {
     position: absolute;
     margin-left: auto;
     margin-right: auto;
