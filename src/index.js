@@ -1,5 +1,3 @@
-import StickyNote from "./StickyNote";
-import Storage from "./Storage";
 import { format } from "date-fns";
 import "./styles.css";
 import { initializeApp } from "firebase/app";
@@ -9,8 +7,8 @@ import {
   doc,
   addDoc,
   deleteDoc,
-  getDocs,
   onSnapshot,
+  updateDoc,
 } from "firebase/firestore";
 
 // FIREBASE
@@ -64,7 +62,37 @@ const createStickyElement = (stickyObject, id) => {
 
   stickyNote.append(deleteBtn, stickyTitle, stickyDescription, stickyDate);
 
+  // Ref for firestore
+  const stickyRef = doc(db, "pins", id);
+
   // Listeners for sticky notes
+
+  stickyTitle.addEventListener("click", (e) => {
+    e.target.setAttribute("contenteditable", "true");
+  });
+
+  stickyTitle.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      updateDoc(stickyRef, {
+        title: e.target.textContent,
+      });
+    }
+  });
+
+  stickyDescription.addEventListener("click", (e) => {
+    e.target.setAttribute("contenteditable", "true");
+    const arr = e.target.textContent.split(" ");
+    arr.shift();
+    e.target.textContent = arr;
+  });
+
+  stickyDescription.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      updateDoc(stickyRef, {
+        description: e.target.textContent,
+      });
+    }
+  });
 
   deleteBtn.addEventListener("click", () => {
     const docRef = doc(db, "pins", id);
