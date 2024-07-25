@@ -1,8 +1,33 @@
 import StickyNote from "./StickyNote";
 import Storage from "./Storage";
 import { format } from "date-fns";
-import './styles.css'
+import "./styles.css";
+import { initializeApp } from "firebase/app";
+import {
+  getFirestore,
+  collection,
+  doc,
+  addDoc,
+  deleteDoc,
+  getDocs,
+  onSnapshot,
+} from "firebase/firestore";
 
+// FIREBASE
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAI-DheX8imePx6Nr27yutHquK4EI42kxg",
+  authDomain: "fir-tutorial-fb9ff.firebaseapp.com",
+  projectId: "fir-tutorial-fb9ff",
+  storageBucket: "fir-tutorial-fb9ff.appspot.com",
+  messagingSenderId: "386305329607",
+  appId: "1:386305329607:web:e4c062f3d859752183b1e2",
+};
+
+initializeApp(firebaseConfig);
+
+const db = getFirestore();
+const colRef = collection(db, "pins");
 
 // DOM Elements
 
@@ -13,12 +38,11 @@ const inputField = document.querySelector("label input");
 const textField = document.querySelector("label textarea");
 const fields = [inputField, textField];
 const dateElement = document.querySelector(".date-element");
-const pinSubmitBtn = document.getElementById("pin-it-btn");
 const maybeLaterSubmitBtn = document.getElementById("maybe-later-btn");
 
 // DOM Creator Functions
 
-const createStickyElement = (stickyObject) => {
+const createStickyElement = (stickyObject, id) => {
   const stickyNote = document.createElement("div");
   stickyNote.classList.add("sticky-note");
   stickyNote.style.transform = `rotate(${getRandomDegree()}deg)`;
@@ -42,35 +66,9 @@ const createStickyElement = (stickyObject) => {
 
   // Listeners for sticky notes
 
-  stickyTitle.addEventListener("click", (e) => {
-    e.target.setAttribute("contenteditable", "true");
-  });
-
-  stickyTitle.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      Storage.reTitleStickyNote(stickyObject, e.target.textContent);
-      render();
-    }
-  });
-
-  // Add a way to add more "bullet points" to sticky notes
-
-  stickyDescription.addEventListener("click", (e) => {
-    e.target.setAttribute("contenteditable", "true");
-    const array = e.target.textContent.split(" ");
-    e.target.textContent = array.pop();
-  });
-
-  stickyDescription.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      Storage.setNewDescription(stickyObject, e.target.textContent);
-      render();
-    }
-  });
-
   deleteBtn.addEventListener("click", () => {
-    Storage.deleteStickyNote(stickyObject);
-    render();
+    const docRef = doc(db, "pins", id);
+    deleteDoc(docRef);
   });
 
   return stickyNote;
@@ -101,17 +99,18 @@ addNoteBtn.addEventListener("click", () => {
   inputField.focus();
 });
 
-pinSubmitBtn.addEventListener("click", (e) => {
+form.addEventListener("submit", (e) => {
   e.preventDefault();
-  if (inputField.value === "" || textField.value === "") return;
-  const newNote = new StickyNote(
-    inputField.value,
-    textField.value,
-    dateElement.value
-  );
-  Storage.addStickyNote(newNote);
+
+  addDoc(colRef, {
+    title: form.title.value,
+    description: form.description.value,
+    date: formatDate(form.date.value),
+  }).then(() => {
+    emptyFields();
+  });
+
   handleFormClass();
-  render();
 });
 
 maybeLaterSubmitBtn.addEventListener("click", (e) => {
@@ -121,18 +120,14 @@ maybeLaterSubmitBtn.addEventListener("click", (e) => {
 
 // Utils
 
+// this is for the pin itself
 const formatDate = (dateEntered) => {
   if (dateEntered === "") return;
   const date = format(new Date(dateEntered), "MMM dd yyyy");
   return "Complete by " + date;
 };
 
-const formatToday = () => {
-  const dateToday = new Date().toDateString().split(" ");
-  const date = format(new Date(dateToday), "MM/dd/yyyy");
-  return date
-};
-
+// this makes date on pin default to current date
 const formatTodayDateOnForm = () => {
   const dateToday = new Date().toDateString().split(" ");
   const dateToEnter = dateToday.join("/");
@@ -148,18 +143,11 @@ const getRandomDegree = () => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-// MAIN RENDERING FUNCTION
-function render() {
+// MAIN RENDERING FUNCTION using Firebase
+
+onSnapshot(colRef, (snapshot) => {
   stickyNotesElement.textContent = "";
-  Storage.getStickyNotes()
-    .getList()
-    .map((sticky) => {
-      stickyNotesElement.appendChild(createStickyElement(sticky));
-    });
-}
-
-const test1 = new StickyNote("Example pin", "This is how your pins will look like! Edit me if you want or delete me using the red pin on top of the note!", `${formatToday()}`);
-
-Storage.addStickyNote(test1);
-
-render();
+  snapshot.docs.forEach((doc) => {
+    stickyNotesElement.appendChild(createStickyElement(doc.data(), doc.id));
+  });
+});

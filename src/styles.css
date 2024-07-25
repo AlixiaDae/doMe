@@ -121,7 +121,7 @@ main {
   text-align: center;
 }
 .sticky-note .sticky-description {
-  font-size: 0.5em;
+  font-size: 0.67em;
   margin-top: 8px;
   word-wrap: break-word;
   overflow: scroll;
