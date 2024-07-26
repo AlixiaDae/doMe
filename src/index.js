@@ -9,16 +9,20 @@ import {
   deleteDoc,
   onSnapshot,
   updateDoc,
+  setDoc,
+  getDoc,
 } from "firebase/firestore";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signOut,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 // DOM Elements
 
+const userH1 = document.querySelector(".user-container h1");
 const stickyNotesElement = document.querySelector(".sticky-notes-container");
 const addNoteBtn = document.querySelector(".add-note-container");
 const pinForm = document.querySelector(".add");
@@ -49,7 +53,7 @@ initializeApp(firebaseConfig);
 
 const db = getFirestore();
 const auth = getAuth();
-const colRef = collection(db, "pins");
+let currentUser;
 
 signUpAuth.addEventListener("click", () => {
   handleSignUpFormClass();
@@ -59,9 +63,18 @@ signUpForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const email = signUpForm.email.value;
   const password = signUpForm.password.value;
+  const userName = signUpForm.username.value;
   createUserWithEmailAndPassword(auth, email, password)
     .then((cred) => {
-      console.log("user created:", cred.user);
+      let userID = cred.user.uid;
+      const data = { id: userID, email: email, username: userName };
+      const db = getFirestore();
+      const userRef = doc(db, "users", userID);
+      setDoc(userRef, data)
+        .then(() => {
+          //console.log("Collection doc created!")
+        })
+        .catch((err) => console.log(err.message));
       signUpForm.reset();
     })
     .catch((err) => console.log(err.message));
@@ -134,8 +147,13 @@ const createStickyElement = (stickyObject, id) => {
   });
 
   deleteBtn.addEventListener("click", () => {
-    const docRef = doc(db, "pins", id);
-    deleteDoc(docRef);
+    const db = getFirestore();
+    const docRef = doc(db, "users", currentUser, "pins", id);
+    deleteDoc(docRef)
+      .then(() => {
+        // console.log("Document deleted");
+      })
+      .catch((err) => console.log(err.message));
   });
 
   return stickyNote;
@@ -190,14 +208,18 @@ addNoteBtn.addEventListener("click", () => {
 
 pinForm.addEventListener("submit", (e) => {
   e.preventDefault();
-
-  addDoc(colRef, {
+  const currentUser = auth.currentUser.uid;
+  const db = getFirestore();
+  const pinRef = collection(db, "users", currentUser, "pins");
+  addDoc(pinRef, {
     title: pinForm.title.value,
     description: pinForm.description.value,
-    date: formatDate(pinForm.date.value),
-  }).then(() => {
-    emptyFields();
-  });
+    date: format(new Date(pinForm.date.value), "MMM dd yyyy"),
+  })
+    .then(() => {
+      emptyFields();
+    })
+    .catch((err) => console.log(err.message));
 
   handlePinFormClass();
 });
@@ -209,7 +231,12 @@ maybeLaterSubmitBtn.addEventListener("click", (e) => {
 
 logOut.addEventListener("click", () => {
   signOut(auth)
-    .then(() => console.log("The user has logged out"))
+    .then(() => {
+      stickyNotesElement.textContent = "";
+      logIn.classList.remove("invisible");
+      logOut.classList.add("invisible");
+      userH1.textContent = "User?";
+    })
     .catch((err) => console.log(err.message));
 });
 
@@ -218,8 +245,10 @@ logInForm.addEventListener("submit", (e) => {
   const email = logInForm.email.value;
   const password = logInForm.password.value;
   signInWithEmailAndPassword(auth, email, password)
-    .then((cred) => {
-      console.log("User logged in:", cred.user);
+    .then(() => {
+      //console.log("User logged in:", cred.user);
+      logOut.classList.remove("invisible");
+      logIn.classList.add("invisible");
     })
     .catch((err) => console.log(err.message));
   logInForm.classList.add("invisible");
@@ -251,10 +280,31 @@ const getRandomDegree = () => {
 };
 
 // MAIN RENDERING FUNCTION using Firebase
-
+/*
 onSnapshot(colRef, (snapshot) => {
   stickyNotesElement.textContent = "";
   snapshot.docs.forEach((doc) => {
     stickyNotesElement.appendChild(createStickyElement(doc.data(), doc.id));
+  });
+}); */
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) return logOut.classList.add("invisible");
+  //console.log(user.uid);
+  logIn.classList.add("invisible");
+  logOut.classList.remove("invisible");
+  currentUser = auth.currentUser.uid;
+  const docRef = doc(db, "users", currentUser);
+  getDoc(docRef).then((snapshot) => {
+    let username = snapshot.data().username;
+    userH1.textContent = username;
+  });
+
+  const colRef = collection(db, "users", currentUser, "pins");
+  onSnapshot(colRef, (snapshot) => {
+    stickyNotesElement.textContent = "";
+    snapshot.docs.forEach((doc) => {
+      stickyNotesElement.appendChild(createStickyElement(doc.data(), doc.id));
+    });
   });
 });

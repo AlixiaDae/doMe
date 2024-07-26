@@ -159,6 +159,12 @@ main .log-in-form .log-in-form-btn:hover {
   top: -40px;
   left: 150px;
 }
+.content-container .user-auth-container .log-out {
+  position: absolute;
+  left: 85px;
+  top: 0;
+  width: 100px;
+}
 .content-container .user-auth-container button {
   background-color: transparent;
   border: none;
