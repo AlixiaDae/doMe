@@ -11,6 +11,8 @@ import {
   updateDoc,
   setDoc,
   getDoc,
+  query,
+  where,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -32,8 +34,8 @@ const signUpLater = document.querySelector(".sign-up-later-btn");
 const logInForm = document.querySelector(".log-in-form");
 const logIn = document.querySelector(".log-in");
 const logOut = document.querySelector(".log-out");
-const inputField = document.querySelector("label input");
-const textField = document.querySelector("label textarea");
+const inputField = document.querySelector(".add label input");
+const textField = document.querySelector(".add label textarea");
 const fields = [inputField, textField];
 const dateElement = document.querySelector(".date-element");
 const maybeLaterSubmitBtn = document.getElementById("maybe-later-btn");
@@ -54,6 +56,7 @@ initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
 let currentUser;
+let unsubCol;
 
 signUpAuth.addEventListener("click", () => {
   handleSignUpFormClass();
@@ -115,7 +118,7 @@ const createStickyElement = (stickyObject, id) => {
   stickyNote.append(deleteBtn, stickyTitle, stickyDescription, stickyDate);
 
   // Ref for firestore
-  const stickyRef = doc(db, "pins", id);
+  const docRef = doc(db, "users", currentUser, "pins", id);
 
   // Listeners for sticky notes
 
@@ -125,7 +128,7 @@ const createStickyElement = (stickyObject, id) => {
 
   stickyTitle.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-      updateDoc(stickyRef, {
+      updateDoc(docRef, {
         title: e.target.textContent,
       });
     }
@@ -140,15 +143,13 @@ const createStickyElement = (stickyObject, id) => {
 
   stickyDescription.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-      updateDoc(stickyRef, {
+      updateDoc(docRef, {
         description: e.target.textContent,
       });
     }
   });
 
   deleteBtn.addEventListener("click", () => {
-    const db = getFirestore();
-    const docRef = doc(db, "users", currentUser, "pins", id);
     deleteDoc(docRef)
       .then(() => {
         // console.log("Document deleted");
@@ -192,8 +193,8 @@ function handleLogInFormClass() {
 }
 
 function emptyFields() {
-  fields.forEach((field) => {
-    field.value = "";
+  fields.forEach((input) => {
+    input.value = "";
   });
 }
 
@@ -208,36 +209,27 @@ addNoteBtn.addEventListener("click", () => {
 
 pinForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  const currentUser = auth.currentUser.uid;
-  const db = getFirestore();
-  const pinRef = collection(db, "users", currentUser, "pins");
-  addDoc(pinRef, {
-    title: pinForm.title.value,
-    description: pinForm.description.value,
-    date: format(new Date(pinForm.date.value), "MMM dd yyyy"),
-  })
-    .then(() => {
-      emptyFields();
+  if (!currentUser) {
+    alert("Please log in first!");
+  } else {
+    const db = getFirestore();
+    const pinRef = collection(db, "users", currentUser, "pins");
+    addDoc(pinRef, {
+      title: pinForm.title.value,
+      description: pinForm.description.value,
+      date: format(new Date(pinForm.date.value), "MMM dd yyyy"),
     })
-    .catch((err) => console.log(err.message));
-
+      .then(() => {
+        emptyFields();
+      })
+      .catch((err) => console.log(err.message));
+  }
   handlePinFormClass();
 });
 
 maybeLaterSubmitBtn.addEventListener("click", (e) => {
   e.preventDefault();
   handlePinFormClass();
-});
-
-logOut.addEventListener("click", () => {
-  signOut(auth)
-    .then(() => {
-      stickyNotesElement.textContent = "";
-      logIn.classList.remove("invisible");
-      logOut.classList.add("invisible");
-      userH1.textContent = "User?";
-    })
-    .catch((err) => console.log(err.message));
 });
 
 logInForm.addEventListener("submit", (e) => {
@@ -252,6 +244,17 @@ logInForm.addEventListener("submit", (e) => {
     })
     .catch((err) => console.log(err.message));
   logInForm.classList.add("invisible");
+});
+
+logOut.addEventListener("click", () => {
+  signOut(auth)
+    .then(() => {
+      stickyNotesElement.textContent = "";
+      logIn.classList.remove("invisible");
+      logOut.classList.add("invisible");
+      userH1.textContent = "User?";
+    })
+    .catch((err) => console.log(err.message));
 });
 
 // Utils
@@ -289,22 +292,47 @@ onSnapshot(colRef, (snapshot) => {
 }); */
 
 onAuthStateChanged(auth, (user) => {
-  if (!user) return logOut.classList.add("invisible");
-  //console.log(user.uid);
-  logIn.classList.add("invisible");
-  logOut.classList.remove("invisible");
-  currentUser = auth.currentUser.uid;
-  const docRef = doc(db, "users", currentUser);
-  getDoc(docRef).then((snapshot) => {
-    let username = snapshot.data().username;
-    userH1.textContent = username;
-  });
+  if (user) {
+    //console.log(user.uid);
+    logIn.classList.add("invisible");
+    logOut.classList.remove("invisible");
+    currentUser = auth.currentUser.uid;
+    snapShotListener();
+    /* const docRef = doc(db, "users", currentUser);
+    getDoc(docRef).then((snapshot) => {
+      let username = snapshot.data().username;
+      userH1.textContent = username;
+    });
 
+    const colRef = collection(db, "users", currentUser, "pins");
+    unsubCol = onSnapshot(colRef, (snapshot) => {
+      stickyNotesElement.textContent = "";
+      snapshot.docs.forEach((doc) => {
+        stickyNotesElement.appendChild(createStickyElement(doc.data(), doc.id));
+      });
+    });*/
+  } else {
+    if (unsubCol) {
+      unsubCol();
+    }
+    logOut.classList.add("invisible");
+  }
+});
+
+const snapShotListener = () => {
+  // console.log(currentUser);
+  const docRef = doc(db, "users", currentUser);
+  getDoc(docRef)
+    .then((doc) => {
+      let username = doc.data().username;
+      userH1.textContent = username;
+    })
+    .catch((err) => console.log(err.message));
   const colRef = collection(db, "users", currentUser, "pins");
-  onSnapshot(colRef, (snapshot) => {
+  unsubCol = onSnapshot(colRef, (snapshot) => {
     stickyNotesElement.textContent = "";
     snapshot.docs.forEach((doc) => {
       stickyNotesElement.appendChild(createStickyElement(doc.data(), doc.id));
     });
   });
-});
+};
