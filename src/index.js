@@ -11,8 +11,6 @@ import {
   updateDoc,
   setDoc,
   getDoc,
-  query,
-  where,
 } from "firebase/firestore";
 import {
   getAuth,
