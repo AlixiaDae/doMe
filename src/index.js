@@ -75,7 +75,6 @@ signUpForm.addEventListener("submit", (e) => {
       const userRef = doc(db, "users", userID);
       setDoc(userRef, data)
         .then(() => {
-          //console.log("Collection doc created!")
         })
         .catch((err) => console.log(err.message));
       signUpForm.reset();
@@ -152,9 +151,7 @@ const createStickyElement = (stickyObject, id) => {
 
   deleteBtn.addEventListener("click", () => {
     deleteDoc(docRef)
-      .then(() => {
-        // console.log("Document deleted");
-      })
+      .then(() => {})
       .catch((err) => console.log(err.message));
   });
 
@@ -253,7 +250,6 @@ logInForm.addEventListener("submit", (e) => {
   const password = logInForm.password.value;
   signInWithEmailAndPassword(auth, email, password)
     .then(() => {
-      //console.log("User logged in:", cred.user);
       logOut.classList.remove("invisible");
       logIn.classList.add("invisible");
     })
@@ -297,35 +293,12 @@ const getRandomDegree = () => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-// MAIN RENDERING FUNCTION using Firebase
-/*
-onSnapshot(colRef, (snapshot) => {
-  stickyNotesElement.textContent = "";
-  snapshot.docs.forEach((doc) => {
-    stickyNotesElement.appendChild(createStickyElement(doc.data(), doc.id));
-  });
-}); */
-
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    //console.log(user.uid);
     logIn.classList.add("invisible");
     logOut.classList.remove("invisible");
     currentUser = auth.currentUser.uid;
     snapShotListener();
-    /* const docRef = doc(db, "users", currentUser);
-    getDoc(docRef).then((snapshot) => {
-      let username = snapshot.data().username;
-      userH1.textContent = username;
-    });
-
-    const colRef = collection(db, "users", currentUser, "pins");
-    unsubCol = onSnapshot(colRef, (snapshot) => {
-      stickyNotesElement.textContent = "";
-      snapshot.docs.forEach((doc) => {
-        stickyNotesElement.appendChild(createStickyElement(doc.data(), doc.id));
-      });
-    });*/
   } else {
     if (unsubCol) {
       unsubCol();
@@ -335,7 +308,6 @@ onAuthStateChanged(auth, (user) => {
 });
 
 const snapShotListener = () => {
-  // console.log(currentUser);
   const docRef = doc(db, "users", currentUser);
   getDoc(docRef)
     .then((doc) => {
