@@ -14,6 +14,14 @@ $maybe-later-sticky-color: #f99584;
 $main-background-color: #cbffcb;
 $sticky-note-color: rgb(238, 234, 8);
 $main-font: 'Sunday';
+$green:#cdfc93;
+$green-shadow: #678543;
+$blue:#71d7ff;
+$blue-shadow: #4693af;
+$purple: #ce81ff;
+$purple-shadow: #8751a8;
+$yellow:#fff68b;
+$yellow-shadow: #928c48;
 
 * {
     margin: 0;
@@ -23,7 +31,7 @@ $main-font: 'Sunday';
     font-family: $main-font;
 }
 
-body, main, .user-container, .sticky-note, .add, .sign-up-form, .log-in-form, label, .inputs, .submit-buttons {
+body, main, .user-container, .sticky-note, .add, .color-container, .sign-up-form, .log-in-form, label, .inputs, .submit-buttons {
     display: flex;
 }
 
@@ -61,6 +69,7 @@ main {
         .inputs {
             flex-direction: column;
             width: 100%;
+            gap: 10px;
     
             label {
                 font-size: .85em;
@@ -135,7 +144,7 @@ main {
     }
 
     .log-in-form {
-        
+        width: fit-content;
         label {
             font-size: .85em;
             text-align: center;
@@ -147,6 +156,24 @@ main {
                 height: 35px;
                 width: 280px;
                 padding: 10px 0 10px 0;
+            }
+        }
+
+        p {
+            font-size: .8em;
+            margin: 0;
+            padding: 0;
+            .sign-up {
+                font-size: inherit;
+                background-color: transparent;
+                border: none;
+                text-decoration: underline;
+                
+                &:hover {
+                    cursor: pointer;
+                    text-decoration: none;
+                    color: blue;
+                }
             }
         }
 
@@ -193,7 +220,7 @@ main {
 
         .log-out {
             position: absolute;
-            left: 85px;
+            left: 0;
             top: 0;
             width: 100px;
         }
@@ -225,6 +252,9 @@ main {
     h1 {
         text-decoration: underline;
         font-size: 2em;
+        &:hover {
+            cursor: default;
+        }
     }
     
 }
@@ -269,12 +299,39 @@ main {
     flex-direction: column;
     height: 190px;
     width: 190px;
-    background-color: $primary-color;
     padding: 14px;
     letter-spacing: 1px;
-    box-shadow: 4px 4px $primary-accent-color;
-    border: 2px solid $primary-accent-color;
     gap: 3px;
+
+    &.pink {
+        box-shadow: 7px 7px $primary-accent-color;
+        background-color: $primary-color;
+        border: 2px solid $primary-accent-color;
+    }
+
+    &.green {
+        background-color: $green;
+        box-shadow: 7px 7px $green-shadow;
+        border: 2px solid $green-shadow;
+    }
+
+    &.blue {
+        background-color: $blue;
+        box-shadow: 7px 7px $blue-shadow;
+        border: 2px solid $blue-shadow;
+    }
+
+    &.purple {
+        background-color: $purple;
+        box-shadow: 7px 7px $purple-shadow;
+        border: 2px solid $purple-shadow;
+    }
+
+    &.yellow {
+        background-color: $yellow;
+        box-shadow: 7px 7px $yellow-shadow;
+        border: 2px solid $yellow-shadow;
+    }
 
     #delete-btn {
         background-color: red;
@@ -361,6 +418,69 @@ main {
             font-size: 1em;
             height: 45px;
         }
+    }
+
+    p {
+        font-size: .9em;
+        text-align: center;
+    }
+
+    .color-container {
+        display: flex;
+        justify-content: space-between;
+        height: 30px;
+        width: inherit;
+
+        input {
+            display: none;
+        }
+
+        label {
+            position: relative;
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            border: 2px solid black;
+            cursor: pointer;
+            height: 30px;
+            width: 30px;
+            overflow: hidden;
+
+            &.green {
+                background-color: $green;
+            }
+
+            &.blue {
+                background-color: $blue;
+            }
+
+            &.purple {
+                background-color: $purple;
+            }
+
+            &.yellow {
+                background-color: $yellow;
+            }
+
+            &:before {
+                content: '';
+                height: 30px;
+                width: 30px;
+                border-radius: 100%;
+            }
+        }
+
+        input:checked + label {
+            height: 30px;
+            width: 30px;
+            border: 5px solid black;
+        }
+
+        input:checked + label:before {
+            height: 30px;
+            width: 30px;
+        }
+        
     }
     
 }

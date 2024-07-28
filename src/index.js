@@ -28,6 +28,7 @@ const userH1 = document.querySelector(".user-container h1");
 const stickyNotesElement = document.querySelector(".sticky-notes-container");
 const addNoteBtn = document.querySelector(".add-note-container");
 const pinForm = document.querySelector(".add");
+const colorInput = document.querySelectorAll(".color-container input");
 const signUpAuth = document.querySelector(".sign-up");
 const signUpForm = document.querySelector(".sign-up-form");
 const signUpLater = document.querySelector(".sign-up-later-btn");
@@ -39,6 +40,7 @@ const textField = document.querySelector(".add label textarea");
 const fields = [inputField, textField];
 const dateElement = document.querySelector(".date-element");
 const maybeLaterSubmitBtn = document.getElementById("maybe-later-btn");
+const signUp = document.querySelector(".sign-up");
 
 // FIREBASE
 
@@ -98,6 +100,7 @@ logIn.addEventListener("click", () => {
 const createStickyElement = (stickyObject, id) => {
   const stickyNote = document.createElement("div");
   stickyNote.classList.add("sticky-note");
+  stickyNote.classList.add(`${stickyObject.color}`);
   stickyNote.style.transform = `rotate(${getRandomDegree()}deg)`;
 
   const deleteBtn = document.createElement("button");
@@ -200,6 +203,11 @@ function emptyFields() {
 
 // Listeners
 
+signUp.addEventListener("click", () => {
+  logInForm.classList.add("invisible");
+  signUpForm.classList.remove("invisible");
+});
+
 addNoteBtn.addEventListener("click", () => {
   handlePinFormClass();
   emptyFields();
@@ -212,12 +220,21 @@ pinForm.addEventListener("submit", (e) => {
   if (!currentUser) {
     alert("Please log in first!");
   } else {
+    let color;
+
+    colorInput.forEach((input) => {
+      if (input.checked) {
+        color = input.value;
+      }
+    });
+
     const db = getFirestore();
     const pinRef = collection(db, "users", currentUser, "pins");
     addDoc(pinRef, {
       title: pinForm.title.value,
       description: pinForm.description.value,
       date: format(new Date(pinForm.date.value), "MMM dd yyyy"),
+      color: color,
     })
       .then(() => {
         emptyFields();

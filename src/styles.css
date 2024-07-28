@@ -10,7 +10,7 @@
   font-family: "Sunday";
 }
 
-body, main, .user-container, .sticky-note, .add, .sign-up-form, .log-in-form, label, .inputs, .submit-buttons {
+body, main, .user-container, .sticky-note, .add, .color-container, .sign-up-form, .log-in-form, label, .inputs, .submit-buttons {
   display: flex;
 }
 
@@ -47,6 +47,7 @@ main .sign-up-form, main .log-in-form {
 main .sign-up-form .inputs {
   flex-direction: column;
   width: 100%;
+  gap: 10px;
 }
 main .sign-up-form .inputs label {
   font-size: 0.85em;
@@ -110,6 +111,10 @@ main .sign-up-form .sign-up-later-btn:hover {
   background-color: #EF7A85;
   box-shadow: 4px 4px #ad5962;
 }
+main .log-in-form {
+  width: -moz-fit-content;
+  width: fit-content;
+}
 main .log-in-form label {
   font-size: 0.85em;
   text-align: center;
@@ -121,6 +126,22 @@ main .log-in-form label input {
   height: 35px;
   width: 280px;
   padding: 10px 0 10px 0;
+}
+main .log-in-form p {
+  font-size: 0.8em;
+  margin: 0;
+  padding: 0;
+}
+main .log-in-form p .sign-up {
+  font-size: inherit;
+  background-color: transparent;
+  border: none;
+  text-decoration: underline;
+}
+main .log-in-form p .sign-up:hover {
+  cursor: pointer;
+  text-decoration: none;
+  color: blue;
 }
 main .log-in-form .log-in-form-btn {
   padding: 10px;
@@ -161,7 +182,7 @@ main .log-in-form .log-in-form-btn:hover {
 }
 .content-container .user-auth-container .log-out {
   position: absolute;
-  left: 85px;
+  left: 0;
   top: 0;
   width: 100px;
 }
@@ -190,6 +211,9 @@ main .log-in-form .log-in-form-btn:hover {
 .user-container h1 {
   text-decoration: underline;
   font-size: 2em;
+}
+.user-container h1:hover {
+  cursor: default;
 }
 
 .add-note-container {
@@ -232,12 +256,34 @@ main .log-in-form .log-in-form-btn:hover {
   flex-direction: column;
   height: 190px;
   width: 190px;
-  background-color: #ffcfd1;
   padding: 14px;
   letter-spacing: 1px;
-  box-shadow: 4px 4px #EF7A85;
-  border: 2px solid #EF7A85;
   gap: 3px;
+}
+.sticky-note.pink {
+  box-shadow: 7px 7px #EF7A85;
+  background-color: #ffcfd1;
+  border: 2px solid #EF7A85;
+}
+.sticky-note.green {
+  background-color: #cdfc93;
+  box-shadow: 7px 7px #678543;
+  border: 2px solid #678543;
+}
+.sticky-note.blue {
+  background-color: #71d7ff;
+  box-shadow: 7px 7px #4693af;
+  border: 2px solid #4693af;
+}
+.sticky-note.purple {
+  background-color: #ce81ff;
+  box-shadow: 7px 7px #8751a8;
+  border: 2px solid #8751a8;
+}
+.sticky-note.yellow {
+  background-color: #fff68b;
+  box-shadow: 7px 7px #928c48;
+  border: 2px solid #928c48;
 }
 .sticky-note #delete-btn {
   background-color: red;
@@ -316,6 +362,57 @@ main .log-in-form .log-in-form-btn:hover {
   text-align: center;
   font-size: 1em;
   height: 45px;
+}
+.add p {
+  font-size: 0.9em;
+  text-align: center;
+}
+.add .color-container {
+  display: flex;
+  justify-content: space-between;
+  height: 30px;
+  width: inherit;
+}
+.add .color-container input {
+  display: none;
+}
+.add .color-container label {
+  position: relative;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  border: 2px solid black;
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+  overflow: hidden;
+}
+.add .color-container label.green {
+  background-color: #cdfc93;
+}
+.add .color-container label.blue {
+  background-color: #71d7ff;
+}
+.add .color-container label.purple {
+  background-color: #ce81ff;
+}
+.add .color-container label.yellow {
+  background-color: #fff68b;
+}
+.add .color-container label:before {
+  content: "";
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+}
+.add .color-container input:checked + label {
+  height: 30px;
+  width: 30px;
+  border: 5px solid black;
+}
+.add .color-container input:checked + label:before {
+  height: 30px;
+  width: 30px;
 }
 
 .invisible {
